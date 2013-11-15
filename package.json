@@ -1,6 +1,6 @@
 {
-    "name":        "grunt-expand-include",
-    "homepage":    "http://github.com/rse/grunt-expand-include",
+    "name":        "grunt-expand-include-with-subs",
+    "homepage":    "http://github.com/mchapman/grunt-expand-include",
     "description": "Grunt Task for Expanding Include Directives",
     "version":     "0.9.6",
     "license":     "MIT",
@@ -31,6 +31,7 @@
         "grunt":                "~0.4.1"
     },
     "dependencies": {
+        "node.extend":          "~1.0.8",
         "chalk":                "~0.3.0"
     },
     "engines": {
