@@ -76,6 +76,7 @@ module.exports = function (grunt) {
             directiveSyntax:        "js",
             expandIncludes:         true,
             expandDefines:          true,
+            substituteEntities:     false,
             adjustReferences:       true,
             onUndefinedVariable:    "keep",
             stripHeaderOfInclude:   true,
@@ -83,6 +84,7 @@ module.exports = function (grunt) {
             keepWhitespaceEpilog:   false,
             repeatWhitespaceProlog: true,
             lineTerminator:         "\n",
+            entities:               {"&":"amp","<":"lt", ">":"gt",'"':"quot","'":"apos"},
             globalDefines:          {}
         });
         if (typeof options.directiveSyntax === "string") {
@@ -169,6 +171,13 @@ module.exports = function (grunt) {
                         txt = prolog + txt;
                     if (options.keepWhitespaceEpilog)
                         txt = txt + epilog;
+                    // substitute entities
+                    if (options.substituteEntities) {
+                        for (var entity in options.entities) {
+                            txt = txt.replace(new RegExp(entity,'g'),'&'+options.entities[entity]+';');
+                        }
+                    }
+
                     return txt;
                 });
             }
