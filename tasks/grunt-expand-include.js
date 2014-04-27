@@ -42,6 +42,7 @@ module.exports = function (grunt) {
             define:  /\s*(["']?)([a-zA-Z][a-zA-Z0-9_-]*)\1\s*:\s*(["'])((?:\\\3|(?!\3).)*)\3\s*/g,
             expand:  /\$([a-zA-Z][a-zA-Z0-9_-]*)/g,
             header:  /^(?:\/\*[^!](?:[\r\n]|.)*?\*\/|(?:\/\/[^\r\n]*\r?\n)*)\r?\n/,
+            strip:   /^(?:\/\*[^!](?:[\r\n]|.)strip *?\*\/|(?:\/\/[^\r\n]*\r?\n)*)\r?\n/,
             adjust:  /(\brequire\((["']))((?:\\\2|(?!\2).)+)(\2\))/g
         },
         "css": {
@@ -54,6 +55,7 @@ module.exports = function (grunt) {
             define:  /\s*(["']?)([a-zA-Z][a-zA-Z0-9_-]*)\1\s*:\s*(["'])((?:\\\3|(?!\3).)*)\3\s*/g,
             expand:  /\$([a-zA-Z][a-zA-Z0-9_-]*)/g,
             header:  /^(?:\/\*[^!](?:[\r\n]|.)*?\*\/|(?:\/\/[^\r\n]*\r?\n)*)\r?\n/,
+            strip:   /^(?:\/\*[^!](?:[\r\n]|.)strip *?\*\/|(?:\/\/[^\r\n]*\r?\n)*)\r?\n/,
             adjust:  /(\burl\((["']))((?:\\\2|(?!\2).)+)(\2\))/g
         },
         "xml": {
@@ -66,6 +68,7 @@ module.exports = function (grunt) {
             define:  /\s*()([a-zA-Z][a-zA-Z0-9_-]*)=(["'])((?:\\\3|(?!\3).)*)\3\s*/g,
             expand:  /\&([a-zA-Z][a-zA-Z0-9_-]*);/g,
             header:  /^<!--[^!](?:[\r\n]|.)*?-->\r?\n/,
+            strip:   /<!--strip [^!](?:[\r\n]|.)*?-->\r?\n/g,
             adjust:  /(\s(?:href|src)=(["']))((?:\\\2|(?!\2).)+)(\2)/g
         }
     };
@@ -81,7 +84,7 @@ module.exports = function (grunt) {
             adjustReferences:       true,
             onUndefinedVariable:    "keep",
             stripHeaderOfInclude:   true,
-            keepWhitespaceProlog:   false,
+            stripSelectedComments:  false,
             keepWhitespaceEpilog:   false,
             repeatWhitespaceProlog: true,
             lineTerminator:         "\n",
@@ -139,6 +142,14 @@ module.exports = function (grunt) {
                         /*  optionally strip header comment of includes  */
                         if (options.stripHeaderOfInclude)
                             txt = txt.replace(options.directiveSyntax.header, "");
+                        /*  optionally strip "special" lines */
+                        if (options.stripSelectedComments) {
+
+                            console.log(txt, options.directiveSyntax.strip);
+                            txt = txt.replace(options.directiveSyntax.strip, function () {
+                                return ""
+                            })
+                        }
 
                         /*  process defines  */
                         var include_defines = {};
@@ -175,7 +186,7 @@ module.exports = function (grunt) {
                         // substitute entities
                         var doSubstitution = ['false','true'].indexOf(include_defines['substitution']);  // check for valid local define
                         if (doSubstitution === -1) {
-                            doSubstitution = options.substituteEntities     // use global if no local found
+                            doSubstitution = options.substituteEntities;     // use global if no local found
                         } else {
                             doSubstitution = doSubstitution!=0?true:false;  // convert local to boolean
                         }
