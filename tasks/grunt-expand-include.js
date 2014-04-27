@@ -144,8 +144,6 @@ module.exports = function (grunt) {
                             txt = txt.replace(options.directiveSyntax.header, "");
                         /*  optionally strip "special" lines */
                         if (options.stripSelectedComments) {
-
-                            console.log(txt, options.directiveSyntax.strip);
                             txt = txt.replace(options.directiveSyntax.strip, function () {
                                 return ""
                             })

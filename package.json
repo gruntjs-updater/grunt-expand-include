@@ -2,7 +2,7 @@
     "name":        "grunt-expand-include-with-subs",
     "homepage":    "http://github.com/mchapman/grunt-expand-include",
     "description": "Grunt Task for Expanding Include Directives with substitutions.  Based on grunt-expand-include by Ralf S. Engelschall",
-    "version":     "0.9.8",
+    "version":     "0.9.9",
     "license":     "MIT",
     "author": {
         "name":    "Mark Chapman",
